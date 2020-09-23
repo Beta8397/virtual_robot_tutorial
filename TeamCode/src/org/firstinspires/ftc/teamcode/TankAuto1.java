@@ -11,6 +11,7 @@ public class TankAuto1 extends LinearOpMode {
     public void runOpMode(){
 
         bot.init(hardwareMap);
+        waitForStart();
 
         bot.setDrivePower(0.5f, 0);
         while (opModeIsActive()){
