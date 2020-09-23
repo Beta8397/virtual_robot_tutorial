@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
+import android.graphics.Color;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -10,6 +12,8 @@ public class MechBot {
     DcMotor backLeft;
     DcMotor backRight;
 
+    ColorSensor colorSensor;
+
     public void init(HardwareMap hwMap) {
         frontLeft = hwMap.get(DcMotor.class, "front_left_motor");
         frontRight = hwMap.get(DcMotor.class, "front_right_motor");
@@ -18,6 +22,14 @@ public class MechBot {
 
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        colorSensor = hwMap.get(ColorSensor.class, "color_sensor");
+    }
+
+    public float[] getHSV() {
+        float[] hsv = new float[3];
+        Color.RGBToHSV(colorSensor.red(), colorSensor.green(),
+                colorSensor.blue(), hsv);
+        return hsv;
     }
 
     public void setDrivePower(float forward, float rotate, float strafe) {
