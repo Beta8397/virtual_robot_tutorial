@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.mechbot.MechBot;
 
 @Autonomous(name="Drive With Color", group="tutorial")
 public class DriveWithColor extends LinearOpMode {
