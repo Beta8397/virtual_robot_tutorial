@@ -79,7 +79,7 @@ public class MechanumBot extends VirtualBot {
     }
 
     protected void createHardwareMap(){
-        motorType = MotorType.Neverest40;
+        motorType = MotorType.NeverestOrbital20;
         hardwareMap = new HardwareMap();
         String[] motorNames = new String[] {"back_left_motor", "front_left_motor", "front_right_motor", "back_right_motor"};
         for (String name: motorNames) hardwareMap.put(name, new DcMotorExImpl(motorType));
