@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.mecbot_tutorial;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.util.AngleUtils;
 
 /**
  * An abstract class that extends LinearOpMode and provides navigation methods that can be called by autonomous op modes
@@ -47,6 +48,9 @@ public abstract class MecBotAutonomous extends LinearOpMode {
         float xStart = bot.pose.x;
         float yStart = bot.pose.y;
 
+        float directionRadians = (float)Math.toRadians(directionDegrees);
+        float targetHeadingRadians = (float)Math.toRadians(targetHeadingDegrees);
+
         /*
          * Control loop for this operation. Break from the loop after the specified distance has been travelled.
          */
@@ -61,7 +65,13 @@ public abstract class MecBotAutonomous extends LinearOpMode {
 
             //TODO: Update robot drive speed based on current position and orientation.
 
+            float vx = -speed * (float)Math.sin(targetHeadingRadians - bot.pose.theta);
+            float vy = speed * (float)Math.cos(targetHeadingRadians - bot.pose.theta);
 
+            float angleOffset = (float)AngleUtils.normalizeRadians(targetHeadingRadians - bot.pose.theta);
+            float va = 0.2f * angleOffset;
+
+            bot.setDriveSpeed(vx, vy, va);
         }
         // We have travelled far enough and broken from loop, so stop the robot.
         bot.setDrivePower(0, 0, 0);
