@@ -15,6 +15,10 @@ public abstract class MecBotAutonomous extends LinearOpMode {
      */
     MecBot bot;
 
+    public interface Predicate {
+        boolean isTrue();
+    }
+
     /**
      * runOpMode is declared "abstract", so we won't actually provide code for it. The code must be provided
      * by classes that extend MechBotAutonomous.
@@ -38,9 +42,10 @@ public abstract class MecBotAutonomous extends LinearOpMode {
      * @param speed                     Speed, in inches per second.
      * @param directionDegrees          Direction of travel (world coordinates), in degrees
      * @param targetHeadingDegrees      Target orientation (world coordinates), in degrees
-     * @param distance                  Distance to travel, in inches, before stopping
+     * @param finished                  Predicate which tells the bot when to stop
      */
-    public void driveStraight(float speed, float directionDegrees, float targetHeadingDegrees, float distance){
+    public void driveStraight(float speed, float directionDegrees,
+                              float targetHeadingDegrees, Predicate finished){
 
         /*
          * Get the robot's starting coordinates, so we can keep track of how far we have travelled.
@@ -55,18 +60,15 @@ public abstract class MecBotAutonomous extends LinearOpMode {
          * Control loop for this operation. Break from the loop after the specified distance has been travelled.
          */
         while (opModeIsActive()){
-            bot.updateOdometry();                                               //Determine current bot position
-            float dSquared = (bot.pose.x - xStart) * (bot.pose.x - xStart)      //Square of distance travelled
-                    + (bot.pose.y - yStart) * (bot.pose.y - yStart);
-            float d = (float)Math.sqrt(dSquared);                               //Distance travelled (inches)
-            if (d >= distance) {
+            bot.updateOdometry();                                               //Determine current bot position             //Distance travelled (inches)
+            if (finished.isTrue()) {
                 break;                                                //Break from loop if we've travelled far enouch
             }
 
             //TODO: Update robot drive speed based on current position and orientation.
 
-            float vx = -speed * (float)Math.sin(targetHeadingRadians - bot.pose.theta);
-            float vy = speed * (float)Math.cos(targetHeadingRadians - bot.pose.theta);
+            float vx = -speed * (float)Math.sin(directionRadians - bot.pose.theta);
+            float vy = speed * (float)Math.cos(directionRadians - bot.pose.theta);
 
             float angleOffset = (float)AngleUtils.normalizeRadians(targetHeadingRadians - bot.pose.theta);
             float va = 0.2f * angleOffset;
@@ -75,6 +77,23 @@ public abstract class MecBotAutonomous extends LinearOpMode {
         }
         // We have travelled far enough and broken from loop, so stop the robot.
         bot.setDrivePower(0, 0, 0);
+    }
+
+    public void turnToHeading(float targetHeadingDegrees, float toleranceDegrees,
+                              float propCoeff) {
+        float targetHeadingRadians = targetHeadingDegrees * (float)Math.PI / 180;
+        float toleranceRadians = toleranceDegrees * (float)Math.PI / 180;
+        while(opModeIsActive()) {
+            bot.updateOdometry();
+            float currentHeading = bot.pose.theta;
+            float angleDiff = (float)AngleUtils.normalizeRadians(targetHeadingRadians - currentHeading);
+            if(Math.abs(angleDiff) < toleranceRadians) {
+                break;
+            } else {
+                bot.setDriveSpeed(0, 0, propCoeff * angleDiff);
+            }
+        }
+        bot.setDrivePower(0, 0,0);
     }
 
 
