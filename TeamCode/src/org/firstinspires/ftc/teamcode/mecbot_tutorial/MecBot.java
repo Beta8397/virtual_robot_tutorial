@@ -48,9 +48,8 @@ public class MecBot {
     /*
      * The heading offset (this gives us flexibility in specifying the world coordinate system).
      *
-     * TODO: Make this private; it should only be accessed by methods of MechBot
      */
-    float headingOffsetRadians = 0;
+    private float headingOffsetRadians = 0;
 
     /*
      * The current pose of the robot.
@@ -109,13 +108,39 @@ public class MecBot {
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.RADIANS);
         headingOffsetRadians = (float)Math.toRadians(headingDegrees) - orientation.firstAngle;
         pose.theta = (float)Math.toRadians(headingDegrees);
-        setTicks();
+        updateTicks();
+    }
+
+    /**
+     * Set pose of robot to specified x, y, and heading. This will: update values in pose; update the value of
+     * headingOffsetRadians; and update the saved tick values.
+     * @param x
+     * @param y
+     * @param headingDegrees
+     */
+    public void setPose(float x, float y, float headingDegrees){
+        pose.x = x;
+        pose.y = y;
+        setHeadingDegrees(headingDegrees);
+    }
+
+    /**
+     * Set x,y values of the robot pose. This will update pose.x and pose.y with the specified values. It will also
+     * update pose.theta with current heading (from BNO055IMU) before updating saved tick values.
+     * @param x
+     * @param y
+     */
+    public void setPose(float x, float y){
+        pose.x = x;
+        pose.y = y;
+        pose.theta = getHeadingRadians();
+        updateTicks();
     }
 
     /**
      * Update the tick readings of the drive motors.
      */
-    public void setTicks(){
+    public void updateTicks(){
         ticksBL = backLeft.getCurrentPosition();
         ticksFL = frontLeft.getCurrentPosition();
         ticksFR = frontRight.getCurrentPosition();
