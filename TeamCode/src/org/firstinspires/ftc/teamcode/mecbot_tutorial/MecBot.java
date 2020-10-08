@@ -29,11 +29,23 @@ public class MecBot {
 
     /*
      * Drive Motors
+     *
+     * TODO: Decide whether we want these public vs private or protected. If private, may want to include "getters"
      */
     DcMotor frontLeft;
     DcMotor frontRight;
     DcMotor backLeft;
     DcMotor backRight;
+
+    /*
+     * TODO: If we use this for real robot, we need the following:
+     *      -A MotorType enum;
+     *      -A constructor that takes motor type, wheel diam, wheelbase width and length, mec wheel alpha, gearing as parameters;
+     *      -Get rid of the color sensor;
+     *      -Modify parameter list of setDrive power so it is: px, py, pa;
+     *      -Tweaks to the BNO055IMU.Parameters object (just copy what we've been using in Android Studio)
+     *
+     */
 
     /*
      * The color sensor
@@ -74,6 +86,10 @@ public class MecBot {
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+
+        //TODO: Set MODE on the Drive Motors to RUN_WITH_ENCODER
+        //TODO: It would also be a good idea to call updateTicks here
+
         colorSensor = hwMap.get(ColorSensor.class, "color_sensor");
 
         imu = hwMap.get(BNO055IMU.class, "imu");
@@ -164,6 +180,8 @@ public class MecBot {
      * @param forward   forward (robot-Y-axis) power
      * @param rotate    rotation power (counter-clockwise if positive)
      * @param strafe    strafe power (robot-X-axis)
+     *
+     * TODO: Consider changing parameter list to px, py, pa
      */
     public void setDrivePower(float forward, float rotate, float strafe) {
         float frontLeftPower = forward - rotate + strafe;

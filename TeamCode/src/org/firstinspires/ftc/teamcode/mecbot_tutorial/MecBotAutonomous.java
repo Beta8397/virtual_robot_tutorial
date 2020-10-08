@@ -6,8 +6,15 @@ import org.firstinspires.ftc.teamcode.util.AngleUtils;
 /**
  * An abstract class that extends LinearOpMode and provides navigation methods that can be called by autonomous op modes
  * that utilize a MechBot object.
+ *
+ * TODO: If we wind up using this for real robot, extend LoggingLinearOpmode rather than LinearOpMode
+ *
  */
 public abstract class MecBotAutonomous extends LinearOpMode {
+
+    /*
+     * TODO: Add relevant constants, including Coefficients for robot control, relevant positions on field, etc.
+     */
 
     /*
      * The MechBot object that will be used by the navigation methods in this class. This must be assigned a value
@@ -47,11 +54,6 @@ public abstract class MecBotAutonomous extends LinearOpMode {
     public void driveStraight(float speed, float directionDegrees,
                               float targetHeadingDegrees, Predicate finished){
 
-        /*
-         * Get the robot's starting coordinates, so we can keep track of how far we have travelled.
-         */
-        float xStart = bot.pose.x;
-        float yStart = bot.pose.y;
 
         float directionRadians = (float)Math.toRadians(directionDegrees);
         float targetHeadingRadians = (float)Math.toRadians(targetHeadingDegrees);
@@ -65,7 +67,7 @@ public abstract class MecBotAutonomous extends LinearOpMode {
                 break;                                                //Break from loop if we've travelled far enouch
             }
 
-            //TODO: Update robot drive speed based on current position and orientation.
+            // Update robot drive speed based on current position and orientation.
 
             float vx = -speed * (float)Math.sin(directionRadians - bot.pose.theta);
             float vy = speed * (float)Math.cos(directionRadians - bot.pose.theta);
@@ -81,6 +83,9 @@ public abstract class MecBotAutonomous extends LinearOpMode {
 
     public void turnToHeading(float targetHeadingDegrees, float toleranceDegrees,
                               float propCoeff) {
+        /*
+         * TODO: If used with real robot, should add a maximum angular speed (here or as public static class constant)
+         */
         float targetHeadingRadians = targetHeadingDegrees * (float)Math.PI / 180;
         float toleranceRadians = toleranceDegrees * (float)Math.PI / 180;
         while(opModeIsActive()) {

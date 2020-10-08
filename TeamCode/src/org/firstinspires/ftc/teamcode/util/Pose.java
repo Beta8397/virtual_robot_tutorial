@@ -1,5 +1,12 @@
 package org.firstinspires.ftc.teamcode.util;
 
+
+/**
+ * Represents the pose (position and heading) of the robot on the field.
+ *
+ * TODO: Consider making this IMMUTABLE.
+ */
+
 public class Pose {
     public float x;
     public float y;
